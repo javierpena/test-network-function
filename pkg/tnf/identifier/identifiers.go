@@ -62,6 +62,7 @@ const (
 	clusterVersionIdentifierURL           = "http://test-network-function.com/tests/clusterVersion"
 	crdStatusExistenceIdentifierURL       = "http://test-network-function.com/tests/crdStatusExistence"
 	daemonSetIdentifierURL                = "http://test-network-function.com/tests/daemonset"
+	jpenaRedHatReleaseIdentifierURL       = "http://test-network-function.com/tests/jpenaRedHatRelease"
 	versionOne                            = "v1.0.0"
 )
 
@@ -648,6 +649,18 @@ var Catalog = map[string]TestCatalogEntry{
 			dependencies.OcBinaryName,
 		},
 	},
+	jpenaRedHatReleaseIdentifierURL: {
+		Identifier:  JpenaRedHatReleaseIdentifier,
+		Description: "check whether the container is running a Red Hat UBI image",
+		Type:        Normative,
+		IntrusionSettings: IntrusionSettings{
+			ModifiesSystem:           false,
+			ModificationIsPersistent: false,
+		},
+		BinaryDependencies: []string{
+			dependencies.GrepBinaryName,
+		},
+	},
 }
 
 // CommandIdentifier is  the Identifier used to represent the generic command test case.
@@ -905,5 +918,10 @@ var CrdStatusExistenceIdentifier = Identifier{
 
 var DaemonSetIdentifier = Identifier{
 	URL:             daemonSetIdentifierURL,
+	SemanticVersion: versionOne,
+}
+
+var JpenaRedHatReleaseIdentifier = Identifier{
+	URL:             jpenaRedHatReleaseIdentifierURL,
 	SemanticVersion: versionOne,
 }

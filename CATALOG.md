@@ -470,6 +470,16 @@ Intrusive|false
 Modifications Persist After Test|false
 Runtime Binaries Required|`ip`
 
+### http://test-network-function.com/tests/jpenaRedHatRelease
+Property|Description
+---|---
+Version|v1.0.0
+Description|check whether the container is running a Red Hat UBI image
+Result Type|normative
+Intrusive|false
+Modifications Persist After Test|false
+Runtime Binaries Required|`grep`
+
 ### http://test-network-function.com/tests/logging
 Property|Description
 ---|---

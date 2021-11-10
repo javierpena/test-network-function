@@ -217,6 +217,11 @@ var (
 		Url:     formTestURL(common.DiagnosticTestKey, "clusterversion"),
 		Version: versionOne,
 	}
+	// TestjpenaRedHatRelease ensures the container is running a Red Hat UBI image
+	TestjpenaRedHatRelease = claim.Identifier{
+		Url:     formTestURL(common.JpenaTestKey, "redhat-release"),
+		Version: versionOne,
+	}
 )
 
 func formDescription(identifier claim.Identifier, description string) string {

@@ -41,6 +41,7 @@ import (
 	"github.com/test-network-function/test-network-function/test-network-function/common"
 	"github.com/test-network-function/test-network-function/test-network-function/diagnostic"
 	_ "github.com/test-network-function/test-network-function/test-network-function/generic"
+	_ "github.com/test-network-function/test-network-function/test-network-function/jpena"
 	_ "github.com/test-network-function/test-network-function/test-network-function/lifecycle"
 	_ "github.com/test-network-function/test-network-function/test-network-function/networking"
 	_ "github.com/test-network-function/test-network-function/test-network-function/observability"
