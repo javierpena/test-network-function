@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"time"
 
@@ -183,4 +184,28 @@ func RunCommandInNode(nodeName string, nodeOc *interactive.Oc, command string, t
 // AddNsenterPrefix adds the nsenter command prefix to run inside a container namespace
 func AddNsenterPrefix(containerPID string) string {
 	return "nsenter -t " + containerPID + " -n "
+}
+
+// RetryWithTimeout will run functionToRun with no parameters, take its return output and pass it through the checkResult function
+// If the output from checkResult is false, it will retry, waiting for pollingPeriod seconds, until the timeout is exceeded
+// Returns two values: the output from functionToRun(), and true if the operation timed out, false if not
+func RetryWithTimeout(functionToRun, checkResult interface{}, timeout, pollingPeriod time.Duration) (interface{}, bool) {
+	fn := reflect.ValueOf(functionToRun)
+	fnResult := reflect.ValueOf(checkResult)
+	arguments := []reflect.Value{}
+	result := []reflect.Value{}
+
+	startTime := time.Now()
+	for elapsed := time.Since(startTime); elapsed < timeout; elapsed = time.Since(startTime) {
+		log.Debugf("Elapsed wait time: %v\n", elapsed)
+		result = fn.Call(arguments)
+		checkResultOutput := fnResult.Call(result)
+		done := checkResultOutput[0].Interface().(bool)
+		if done {
+			return result[0].Interface(), false
+		}
+		time.Sleep(pollingPeriod)
+	}
+
+	return result[0].Interface(), true
 }

@@ -120,19 +120,14 @@ var _ = ginkgo.Describe(common.LifecycleTestKey, func() {
 })
 
 func waitForAllDeploymentsReady(namespace string, timeout, pollingPeriod time.Duration) int { //nolint:unparam // it is fine to use always the same value for timeout
-	var elapsed time.Duration
-	var notReadyDeployments []string
+	notReadyDeps, _ := utils.RetryWithTimeout(func() int {
+		_, notReadyDeployments := getDeployments(namespace)
+		return len(notReadyDeployments)
+	},
+		func(notReadyDeployments int) bool { return notReadyDeployments == 0 },
+		timeout, pollingPeriod)
 
-	for elapsed < timeout {
-		_, notReadyDeployments = getDeployments(namespace)
-		log.Debugf("Waiting for deployments to get ready, remaining: %d deployments", len(notReadyDeployments))
-		if len(notReadyDeployments) == 0 {
-			break
-		}
-		time.Sleep(pollingPeriod)
-		elapsed += pollingPeriod
-	}
-	return len(notReadyDeployments)
+	return notReadyDeps.(int)
 }
 
 // restoreDeployments is the last attempt to restore the original test deployments' replicaCount
