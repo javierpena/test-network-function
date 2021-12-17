@@ -71,17 +71,15 @@ func getOperatorCertificationRequestFunction(organization, operatorName string) 
 // waitForCertificationRequestToSuccess calls to certificationRequestFunc until it returns true.
 func waitForCertificationRequestToSuccess(certificationRequestFunc func() bool, timeout time.Duration) bool {
 	const pollingPeriod = 1 * time.Second
-	var elapsed time.Duration
 	isCertified := false
 
-	for elapsed < timeout {
+	timeoutTime := time.Now().Add(timeout)
+	for time.Now().Before(timeoutTime) {
 		isCertified = certificationRequestFunc()
-
 		if isCertified {
 			break
 		}
 		time.Sleep(pollingPeriod)
-		elapsed += pollingPeriod
 	}
 	return isCertified
 }

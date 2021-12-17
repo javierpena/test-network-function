@@ -121,17 +121,16 @@ var _ = ginkgo.Describe(common.LifecycleTestKey, func() {
 })
 
 func waitForAllPodSetsReady(namespace string, timeout, pollingPeriod time.Duration, resourceType configsections.PodSetType) int { //nolint:unparam // it is fine to use always the same value for timeout
-	var elapsed time.Duration
 	var notReadyPodSets []string
 
-	for elapsed < timeout {
+	timeoutTime := time.Now().Add(timeout)
+	for time.Now().Before(timeoutTime) {
 		_, notReadyPodSets = GetPodSets(namespace, resourceType)
 		log.Debugf("Waiting for %s to get ready, remaining: %d PodSets", string(resourceType), len(notReadyPodSets))
 		if len(notReadyPodSets) == 0 {
 			break
 		}
 		time.Sleep(pollingPeriod)
-		elapsed += pollingPeriod
 	}
 	return len(notReadyPodSets)
 }
